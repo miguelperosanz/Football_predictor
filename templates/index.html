@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Football predictor</title>
+
+  <script src="https://s.codepen.io/assets/libs/modernizr.js" type="text/javascript"></script>
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/style.css') }}">
+
+  
+
+</head>
+
+<!--------------------------------------------------------------------------------------------->
+
+<body>
+
+
+<h2>Machine learning football predictor</h2>
+
+<a href="{{ url_for('static', filename = 'project.html')}}" style = "position: absolute; left:1350px; top:40px; font-size:90%" target="_blank"> 
+About me and the ML Football Predictor
+</a>
+
+
+<br>
+<!--------------------------------------------------------------------------------------------->
+<form action="{{ url_for('predict')}}" method="post">  
+
+
+ <button onclick="update()" style="background-color: burlywood; border-color:blue; color:black; position:absolute; left:700px; top:150px; 
+ border-radius: 4px; padding: 12px 28px; font-size: 18px; font-family: Montserrat, sans-serif; cursor:pointer">Make predictions</button>
+
+<!-- ojo con este update llamandose igual que a funcion! puede ser el problema-->
+
+  
+
+<table class="egt">
+
+ 
+
+
+                                   <!-- thead se usa para abrir una cabecera en una tabla -->
+  <tr>                                       <!-- tr se usa para abrir una linea en una tabla -->
+      <th>Home team</th>                     <!-- th se usa para deldas de cabeceras, lo pone en negrita. Para celdas normales se usa td -->
+      <th>Away team</th>
+  </tr>  
+
+  <tr>                                       <!-- tr se usa para abrir una linea en una tabla -->
+      <td align ="center">                                                        <!-- abrimos celda -->    
+      <div class="autocomplete" style="width:300px;">             <!-- abrimos una division que se verá afectada por las caracteristicas definidas abajo. Es como un container --> 
+      <input id="home_team" type="text" value="{{ request.form.get('team1', '') }}" name="team1" required="required" autocomplete="off"/>
+      </div>   
+      </td>
+  
+  
+      <td align="center">   
+      <div class="autocomplete" style="width:300px;">
+      <input id="away_team" type="text" value="{{ request.form.get('team2', '') }}" name="team2" required="required" autocomplete="off"/>
+      </div>
+      </td>
+     
+  </tr>    
+  
+  </table>
+
+<!---- I introduce 2 white spaces. You don't need to open and close this label ------------------------------>
+
+  <br>    
+  <br>
+
+<!----------------------------------------------------------------------------------------------------------->
+<h1>Half time winner</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Half time home team win probability (%)</th>
+    <th>Half time draw game probability (%)</th>
+    <th>Half time away team win probability (%)</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="values_half">   
+      {{ value4 }}
+      </div>
+      <div class="values_half_before" style="display: none">
+      {{ value4_old }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="values_half">   
+      {{ value5 }}
+      </div>
+      <div class="values_half_before" style="display: none">
+        {{ value5_old }}
+        </div>
+    </td>
+  
+    <td> 
+      <div class="values_half">   
+      {{ value6 }}
+      </div>
+      <div class="values_half_before" style="display: none">
+        {{ value6_old }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+<h1>Full time winner</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Full time home team win probability (%)</th>
+    <th>Full time draw game probability (%)</th>
+    <th>Full time away team win probability (%)</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="values">   
+      {{ value1 }}
+      </div>
+      <div class="values_full_before" style="display: none">
+        {{ value1_old }}
+        </div>
+    </td>
+    
+    
+    <td> 
+      <div class="values">   
+      {{ value2 }}
+      </div>
+      <div class="values_full_before" style="display: none">
+        {{ value2_old }}
+        </div>
+    </td>
+  
+    <td> 
+      <div class="values">   
+      {{ value3 }}
+      </div>
+      <div class="values_full_before" style="display: none">
+        {{ value3_old }}
+        </div>
+    </td>
+  </tr>
+</table>
+
+<!----------------------------------------------------------------------------------------------------------->
+
+<h1>Half time goals</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Half time total goals</th>
+    <th>Half time home team goals</th>
+    <th>Half time away team goals</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="half_time_goals">   
+      {{ value9 }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="half_time_goals">   
+      {{ value7 }}
+      </div>
+    </td>
+  
+    <td> 
+      <div class="half_time_goals">   
+      {{ value8 }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+<h1>Full time goals</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Full time total goals</th>
+    <th>Full time home team goals</th>
+    <th>Full time away team goals</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="full_time_goals">   
+      {{ value12 }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="full_time_goals">   
+      {{ value10 }}
+      </div>
+    </td>
+  
+    <td> 
+      <div class="full_time_goals">   
+      {{ value11 }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+<h1>Full time shots</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Total shots</th>
+    <th>Home team shots</th>
+    <th>Away team shots</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="full_time_shots">   
+      {{ value13 }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="full_time_shots">   
+      {{ value14 }}
+      </div>
+    </td>
+  
+    <td> 
+      <div class="full_time_shots">   
+      {{ value15 }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+<h1>Full time shots on target</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Total shots on target</th>
+    <th>Home team shots on target</th>
+    <th>Away team shots on target</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="shots_on_target">   
+      {{ value16 }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="shots_on_target">   
+      {{ value17 }}
+      </div>
+    </td>
+  
+    <td> 
+      <div class="shots_on_target">   
+      {{ value18 }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+<h1>Full time corners</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Total corners</th>
+    <th>Home team corners</th>
+    <th>Away team corners</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="corners">   
+      {{ value19 }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="corners">   
+      {{ value20 }}
+      </div>
+    </td>
+  
+    <td> 
+      <div class="corners">   
+      {{ value21 }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+<h1>Full time fouls committed</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Total fouls committed</th>
+    <th>Home team fouls committed</th>
+    <th>Away team fouls committed</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="fouls_commited">   
+      {{ value22 }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="fouls_commited">   
+      {{ value23 }}
+      </div>
+    </td>
+  
+    <td> 
+      <div class="fouls_commited">   
+      {{ value24 }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+
+<h1>Full time yellow cards</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Total yellow cards</th>
+    <th>Home team yellow cards</th>
+    <th>Away team yellow cards</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="yellow_cards">   
+      {{ value28 }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="yellow_cards">   
+      {{ value29 }}
+      </div>
+    </td>
+  
+    <td> 
+      <div class="yellow_cards">   
+      {{ value30 }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+
+<h1>Full time red cards</h1>
+<table class="rwd-table">
+  <tr>
+    <th>Total red cards</th>
+    <th>Home team red cards</th>
+    <th>Away team red cards</th>
+  </tr>
+ 
+  <tr>
+    <td> 
+      <div class="red_cards">   
+      {{ value31 }}
+      </div>
+    </td>
+    
+    
+    <td> 
+      <div class="red_cards">   
+      {{ value32 }}
+      </div>
+    </td>
+  
+    <td> 
+      <div class="red_cards">   
+      {{ value33 }}
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+<script> 
+  let num04 = '{{ value4 }}'; 
+  let num05 = '{{ value5 }}'; 
+  let num06 = '{{ value6 }}'; 
+  let num01 = '{{ value1 }}'; 
+  let num02 = '{{ value2 }}'; 
+  let num03 = '{{ value3 }}'; 
+  let num09 = '{{ value9 }}'; 
+  let num07 = '{{ value7 }}'; 
+  let num08 = '{{ value8 }}'; 
+  let num12 = '{{ value12 }}'; 
+  let num10 = '{{ value10 }}'; 
+  let num11 = '{{ value11 }}'; 
+  let num13 = '{{ value13 }}'; 
+  let num14 = '{{ value14 }}'; 
+  let num15 = '{{ value15 }}'; 
+  let num16 = '{{ value16 }}'; 
+  let num17 = '{{ value17 }}'; 
+  let num18 = '{{ value18 }}'; 
+  let num19 = '{{ value19 }}'; 
+  let num20 = '{{ value20 }}'; 
+  let num21 = '{{ value21 }}'; 
+  let num22 = '{{ value22 }}'; 
+  let num23 = '{{ value23 }}'; 
+  let num24 = '{{ value24 }}'; 
+  let num28 = '{{ value28 }}'; 
+  let num29 = '{{ value29 }}'; 
+  let num30 = '{{ value30 }}'; 
+  let num31 = '{{ value31 }}'; 
+  let num32 = '{{ value32 }}'; 
+  let num33 = '{{ value33 }}'; 
+</script> 
+
+
+</form>
+
+<!-- Create a div where the graph will take place if we want more graphs, we have to introduce more scripts ----->
+
+<div id="my_dataviz_b" style = "position: absolute; left:900px; top:250px" z-index = -1></div>
+
+<div id="my_dataviz" style = "position: absolute; left:1320px; top:250px" z-index = -1></div>
+
+<div id="my_dataviz1" style = "position: absolute; left:900px; top:650px" z-index = -1></div>
+
+<div id="my_dataviz2" style = "position: absolute; left:1300px; top:650px" z-index = -1></div>
+
+<div id="my_dataviz3" style = "position: absolute; left:900px; top:1025px" z-index = -1></div>
+
+<div id="my_dataviz4" style = "position: absolute; left:1300px; top:1025px" z-index = -1></div>
+
+<div id="my_dataviz5" style = "position: absolute; left:900px; top:1400px" z-index = -1></div>
+
+<div id="my_dataviz6" style = "position: absolute; left:1300px; top:1400px" z-index = -1></div>
+
+<div id="my_dataviz7" style = "position: absolute; left:900px; top:1745px" z-index = -1></div>
+
+<div id="my_dataviz8" style = "position: absolute; left:1300px; top:1745px" z-index = -1></div>
+
+<div style = "position: absolute; left:1020px; top:250px"><b>Half time winner</b></div>
+
+<div style = "position: absolute; left:1370px; top:250px"><b>Full time winner</b></div>
+
+<div style = "position: absolute; left:1020px; top:650px"><b>Half time goals</b></div>
+
+<div style = "position: absolute; left:1410px; top:650px"><b>Full time goals</b></div>
+
+<div style = "position: absolute; left:1020px; top:1020px"><b>Full time shots</b></div>
+
+<div style = "position: absolute; left:1370px; top:1020px"><b>Full time shots on target</b></div>
+
+<div style = "position: absolute; left:1020px; top:1380px"><b>Full time corners</b></div>
+
+<div style = "position: absolute; left:1350px; top:1380px"><b>Full time fouls committed</b></div>
+
+<div style = "position: absolute; left:1020px; top:1750px"><b>Full time yellow cards</b></div>
+
+<div style = "position: absolute; left:1370px; top:1750px"><b>Full time red cards</b></div>
+
+
+
+</body>
+
+
+</html>
+
+
+<script src="https://d3js.org/d3.v6.min.js"></script>
+
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/autocomplete.js') }}"></script>
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/half_time_donut.js') }}"></script> 
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/full_time_donut.js') }}"></script> 
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/barplot.js') }}"></script> 
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/barplot2.js') }}"></script>
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/barplot3.js') }}"></script>
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/barplot4.js') }}"></script>
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/barplot5.js') }}"></script>
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/barplot6.js') }}"></script>
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/barplot7.js') }}"></script>
+
+<script type=text/javascript src="{{
+  url_for('static', filename='/js/barplot8.js') }}"></script>
+
+
+  
+
+
+
+
+
+<!--------------------------------------------------------------------------------------------------------->
+
+
+
+
+
