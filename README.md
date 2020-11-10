@@ -9,4 +9,5 @@ Machine Learning Football Predictor
 
 2) Machine learning part. As usual, not the longest part of the project. I used logistic regressions and linear regressions. No, don't think I did not try deep learning. I did and I used Grid Search cross validation for searching the best hyperparameters. Surprisingly the results for the linear regression were a little bit more accurate than for the neural network. If you want to check it, just check the file Models.ipynb.
 
-3) Visualization and deployment of results. For the graphs I used d3.js, a powerful library of javascript when it comes to data visualization. I deployed it by using Flask. The "core" of the app is the file app.py. You can check index.html to see the html documents and the d3.js files in the folder static/js
+3) Visualization and deployment of results. For the graphs I used d3.js, a powerful library of javascript when it comes to data visualization. I deployed it by using Flask. The "core" of the app is the file app.py. You can check index.html to see the html documents and the d3.js files in the folder static/js.
+I deployed the project by using Flask and used AWS with Elastic Beanstalk for the web page: http://footballpredictor14-env.eba-fv9fugkn.eu-west-1.elasticbeanstalk.com/
