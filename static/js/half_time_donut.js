@@ -61,7 +61,7 @@ function update() {
   .value(function(d) {return d.innerHTML; })(data);
 
 
-  if (pie[0].value + pie[0].value + pie[0].value < 90) {
+  if (pie[0].value + pie[1].value + pie[2].value < 90) {
     var annotations = ["", "", ""];
   } else {
     var annotations = ["Home win", "Draw game", "Away win"];
